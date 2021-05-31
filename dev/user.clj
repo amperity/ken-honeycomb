@@ -6,6 +6,7 @@
     [ken.context :as ctx]
     [ken.core :as ken]
     [ken.event :as event]
+    [ken.honeycomb :as hc]
     [ken.tap :as tap]
     [ken.trace :as trace]
     [manifold.deferred :as d]))

@@ -140,7 +140,7 @@
   [{:keys [api-host
            dataset
            sample-rate
-           writekey]}]
+           write-key]}]
   (->
     (LibHoney/options)
     (cond->
@@ -153,8 +153,8 @@
       sample-rate
       (.setSampleRate sample-rate)
 
-      writekey
-      (.setWriteKey writekey))
+      write-key
+      (.setWriteKey write-key))
     (.build)))
 
 
@@ -204,7 +204,7 @@
 ;; ## Observer Component
 
 (defrecord HoneyObserver
-  [^HoneyClient client dataset writekey transform]
+  [^HoneyClient client dataset write-key transform]
 
   component/Lifecycle
 
@@ -225,18 +225,17 @@
 
 (defn honey-observer
   "Constructs a new `HoneyObserver` component for the provided dataset, using
-  the secret writekey. Other options will be merged into the component.
+  the secret write-key. Other options will be merged into the component.
 
-  By default, this sends all event fields provided, after some formatting to
-  make them compatible with Honeycomb's supported types. You can provide some
-  custom preprocessing logic by setting the `:transform` key to a function
-  which accepts the event data and returns an updated map of data to send. If
-  the function returns nil or an empty map, the event will be discarded.
+  Also accepts:
 
-  One use of this is to set `rename-default-fields` to map ken's internal keys
-  to match the default Honeycomb schema."
-  [dataset writekey & {:as opts}]
+  - `:transform`
+    A function called on every event before sending it. Should return an
+    updated event map, or nil to drop the event.
+  - `:response-observer`
+    A map of callbacks when events are accepted or rejected on sending."
+  [dataset write-key & {:as opts}]
   (map->HoneyObserver
     (assoc opts
            :dataset dataset
-           :writekey writekey)))
+           :write-key write-key)))

@@ -17,19 +17,22 @@
     java.net.URI))
 
 
-;; ## Event Processing
+;; ## Field Formatting
 
-(def default-fields
-  "A default set of field mappings that transform ken's internal keywords to
-  match the standard Honeycomb schema."
-  {::event/label     :name
-   ::event/level     :level
-   ::event/message   :message
-   ::event/duration  :duration_ms
-   ;; ???            :service_name
-   ::trace/trace-id  :trace.trace_id
-   ::trace/parent-id :trace.parent_id
-   ::trace/span-id   :trace.span_id})
+(defn rename-default-fields
+  "Transforming function which renames some ken keywords to match the default
+  Honeycomb schema."
+  [event]
+  (set/rename-keys
+    event
+    {::event/label     :name
+     ::event/level     :level
+     ::event/message   :message
+     ::event/duration  :duration_ms
+     ;; ???            :service_name
+     ::trace/trace-id  :trace.trace_id
+     ::trace/parent-id :trace.parent_id
+     ::trace/span-id   :trace.span_id}))
 
 
 (defn- format-throwable
@@ -87,42 +90,45 @@
     (str x)))
 
 
-(defn- process-event
+(defn- format-fields
   "Process a ken event to coerce some data types into data types that Honeycomb
   can handle as well as perform some data cleanup on the event."
-  [field-map event]
-  (-> event
-      (dissoc ::event/time ::event/sample-rate)
-      (set/rename-keys field-map)
-      (->> (walk/prewalk format-value))))
+  [transform event]
+  (when-let [fields (-> event
+                        (dissoc ::event/time ::event/sample-rate)
+                        (transform)
+                        (not-empty))]
+    (walk/prewalk format-value fields)))
 
 
 (defn- create-event
   "Create a Honeycomb Event object from a ken event."
   ^Event
-  [^HoneyClient honeyclient field-map data]
-  (let [event (.createEvent honeyclient)]
-    ;; TODO: it's possible for events to override some of the client
-    ;; properties; how should this be exposed?
-    ;; - ApiHost
-    ;; - Dataset
-    ;; - Metadata
-    ;; - WriteKey
-    (when-let [timestamp (::event/time data)]
-      (.setTimestamp event (inst-ms timestamp)))
-    (when-let [sample-rate (::event/sample-rate data)]
-      (.setSampleRate event (long sample-rate)))
-    (when (seq data)
-      (.addFields event (process-event field-map data)))
-    event))
+  [^HoneyClient honeyclient transform data]
+  (let [event (.createEvent honeyclient)
+        fields (format-fields transform data)]
+    (when (seq fields)
+      (.addFields event fields)
+      (when-let [timestamp (::event/time data)]
+        (.setTimestamp event (inst-ms timestamp)))
+      (when-let [sample-rate (::event/sample-rate data)]
+        (.setSampleRate event (long sample-rate)))
+      ;; TODO: it's possible for events to override some of the client
+      ;; properties; how should this be exposed?
+      ;; - ApiHost
+      ;; - Dataset
+      ;; - Metadata
+      ;; - WriteKey
+      event)))
 
 
 (defn- send!
   "Records a ken event and sends a Honeycomb Event. Subscribe this function to
   the ken tap to connect events to honeycomb.io."
-  [honeyclient field-map event]
-  (when-not (false? (::trace/keep? event))
-    (.send (create-event honeyclient field-map event))))
+  [honeyclient transform data]
+  (when-not (false? (::trace/keep? data))
+    (when-let [event (create-event honeyclient transform data)]
+      (.send event))))
 
 
 ;; ## Client Construction
@@ -198,14 +204,14 @@
 ;; ## Observer Component
 
 (defrecord HoneyObserver
-  [^HoneyClient client dataset writekey field-map]
+  [^HoneyClient client dataset writekey transform]
 
   component/Lifecycle
 
   (start
     [this]
     (let [client (init-honeyclient this)]
-      (tap/subscribe! ::send (partial send! client field-map))
+      (tap/subscribe! ::send (partial send! client (or transform identity)))
       (assoc this :client client)))
 
 
@@ -221,13 +227,16 @@
   "Constructs a new `HoneyObserver` component for the provided dataset, using
   the secret writekey. Other options will be merged into the component.
 
-  By default, this renames several ken fields to match the default Honeycomb
-  schema. You can override this by providing a custom `:field-map` from ken
-  event keys to the desired Honeycomb output key."
+  By default, this sends all event fields provided, after some formatting to
+  make them compatible with Honeycomb's supported types. You can provide some
+  custom preprocessing logic by setting the `:transform` key to a function
+  which accepts the event data and returns an updated map of data to send. If
+  the function returns nil or an empty map, the event will be discarded.
+
+  One use of this is to set `rename-default-fields` to map ken's internal keys
+  to match the default Honeycomb schema."
   [dataset writekey & {:as opts}]
   (map->HoneyObserver
-    (merge
-      {:field-map default-fields}
-      opts
-      {:dataset dataset
-       :writekey writekey})))
+    (assoc opts
+           :dataset dataset
+           :writekey writekey)))

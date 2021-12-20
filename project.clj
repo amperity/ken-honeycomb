@@ -11,7 +11,7 @@
   [[org.clojure/clojure "1.10.1"]
    [com.amperity/ken "1.0.0"]
    [com.stuartsierra/component "1.0.0"]
-   [io.honeycomb.libhoney/libhoney-java "1.3.1"]]
+   [io.honeycomb.libhoney/libhoney-java "1.4.0"]]
 
   :profiles
   {:dev

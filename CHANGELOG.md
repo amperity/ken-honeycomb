@@ -35,6 +35,7 @@ internal adoption in Amperity's codebase.
 Initial open-source project release.
 
 
-[Unreleased]: https://github.com/amperity/ken/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/amperity/ken/compare/1.0.2...HEAD
+[1.0.2]: https://github.com/amperity/ken/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/amperity/ken/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/amperity/ken/compare/0.1.0...1.0.0

@@ -1,4 +1,4 @@
-(defproject com.amperity/ken-honeycomb "1.0.2-SNAPSHOT"
+(defproject com.amperity/ken-honeycomb "1.0.2"
   :description "Observability library to integrate ken and honeycomb"
   :url "https://github.com/amperity/ken-honeycomb"
   :license {:name "MIT License"
@@ -11,12 +11,12 @@
   [[org.clojure/clojure "1.10.3"]
    [com.amperity/ken "1.0.1"]
    [com.stuartsierra/component "1.0.0"]
-   [io.honeycomb.libhoney/libhoney-java "1.4.0"]]
+   [io.honeycomb.libhoney/libhoney-java "1.4.1"]]
 
   :profiles
   {:dev
    {:dependencies
-    [[org.slf4j/slf4j-nop "1.7.32"]]}
+    [[org.slf4j/slf4j-nop "1.7.35"]]}
 
    :repl
    {:source-paths ["dev"]

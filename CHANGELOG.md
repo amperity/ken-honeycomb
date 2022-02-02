@@ -8,12 +8,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+...
 
-## [1.0.1]
+
+## [1.0.2] - 2022-02-02
 
 ### Changed
+- Update libhoney-java to 1.4.1 to fix recurring `NoSuchMethodError` on the
+  shaded `ConnectionClosedException` class.
 
-* Update dependencies to latest stable versions.
+
+## [1.0.1] - 2021-12-27
+
+### Changed
+- Update dependencies to latest stable versions.
 
 
 ## [1.0.0] - 2021-06-08

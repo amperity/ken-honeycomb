@@ -1,4 +1,4 @@
-(defproject com.amperity/ken-honeycomb "1.0.3-SNAPSHOT"
+(defproject com.amperity/ken-honeycomb "1.0.3"
   :description "Observability library to integrate ken and honeycomb"
   :url "https://github.com/amperity/ken-honeycomb"
   :license {:name "MIT License"

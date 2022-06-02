@@ -9,17 +9,17 @@
 
   :dependencies
   [[org.clojure/clojure "1.10.3"]
-   [com.amperity/ken "1.0.1"]
-   [com.stuartsierra/component "1.0.0"]
-   [io.honeycomb.libhoney/libhoney-java "1.4.1"]]
+   [com.amperity/ken "1.0.2"]
+   [com.stuartsierra/component "1.1.0"]
+   [io.honeycomb.libhoney/libhoney-java "1.5.0"]]
 
   :profiles
   {:dev
    {:dependencies
-    [[org.slf4j/slf4j-nop "1.7.35"]]}
+    [[org.slf4j/slf4j-nop "1.7.36"]]}
 
    :repl
    {:source-paths ["dev"]
     :jvm-opts ["-XX:-OmitStackTraceInFastThrow"]
     :dependencies
-    [[org.clojure/tools.namespace "1.2.0"]]}})
+    [[org.clojure/tools.namespace "1.3.0"]]}})

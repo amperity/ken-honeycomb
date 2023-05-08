@@ -10,6 +10,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ...
 
+
+## [1.1.0] - 2023-05-08
+
+### Changed
+- Update dependencies to latest stable versions.
+
+### Added
+- Added new utility functions for recording span events and links.
+  [#4](https://github.com/amperity/ken-honeycomb/issues/4)
+  [PR#5](https://github.com/amperity/ken-honeycomb/pull/5)
+
+
 ## [1.0.3] - 2022-06-02
 
 ### Changed
@@ -40,7 +52,8 @@ internal adoption in Amperity's codebase.
 Initial open-source project release.
 
 
-[Unreleased]: https://github.com/amperity/ken/compare/1.0.3...HEAD
+[Unreleased]: https://github.com/amperity/ken/compare/1.1.0...HEAD
+[1.1.0]: https://github.com/amperity/ken/compare/1.0.3...1.1.0
 [1.0.3]: https://github.com/amperity/ken/compare/1.0.2...1.0.3
 [1.0.2]: https://github.com/amperity/ken/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/amperity/ken/compare/1.0.0...1.0.1

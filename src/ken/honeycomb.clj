@@ -4,6 +4,7 @@
     [clojure.set :as set]
     [clojure.walk :as walk]
     [com.stuartsierra.component :as component]
+    [ken.core :as ken]
     [ken.event :as event]
     [ken.tap :as tap]
     [ken.trace :as trace])
@@ -239,3 +240,61 @@
     (assoc opts
            :dataset dataset
            :write-key write-key)))
+
+
+;; ## Honeycomb Utilities
+
+(defn add-span-event
+  "Add a point-in-time event to the enclosing span, such as an error."
+  [data]
+  (-> data
+      (ken/create-span)
+      (ken/enrich-span)
+      (merge (trace/child-attrs))
+      (dissoc ::trace/span-id)
+      (assoc :io.honeycomb/annotation-type "span_event")
+      (tap/send)))
+
+
+(defn add-span-link
+  "Add a link from the identified (or current) span to another trace or span."
+  ([target-trace target-span]
+   (let [current-data (trace/current-data)
+         current-trace (::trace/trace-id current-data)
+         current-span (::trace/span-id current-data)]
+     (add-span-link current-trace current-span target-trace target-span)))
+  ([current-trace current-span target-trace target-span]
+   (when (and current-trace
+              current-span
+              (or target-trace
+                  target-span))
+     (->
+       {::event/time (event/now)
+        ::event/level :trace
+        ::trace/trace-id current-trace
+        ::trace/parent-id current-span
+        :io.honeycomb/annotation-type "link"}
+       (cond->
+         target-trace
+         (assoc :io.honeycomb/link-trace-id target-trace)
+         target-span
+         (assoc :io.honeycomb/link-span-id target-span))
+       (ken/enrich-span)
+       (tap/send)))))
+
+
+(defmacro watch-linked
+  "Observe the work being done in this form as a separate subtrace which will be linked to
+  the enclosing span. The provided data is set on the new span, as in `ken.core/watch`."
+  [data & body]
+  `(let [outer-data# (trace/current-data)
+         outer-trace# (::trace/trace-id outer-data#)
+         outer-span# (::trace/span-id outer-data#)]
+     (trace/with-data nil
+       (ken/watch ~data
+         (let [inner-data# (trace/current-data)
+               inner-trace# (::trace/trace-id inner-data#)
+               inner-span# (::trace/span-id inner-data#)]
+           (add-span-link outer-trace# outer-span# inner-trace# inner-span#)
+           (add-span-link inner-trace# inner-span# outer-trace# outer-span#))
+         ~@body))))

@@ -26,14 +26,19 @@
   [event]
   (set/rename-keys
     event
-    {::event/label     :name
-     ::event/level     :level
-     ::event/message   :message
-     ::event/duration  :duration_ms
-     ;; ???            :service_name
+    {::event/label    :name
+     ::event/level    :level
+     ::event/message  :message
+     ::event/duration :duration_ms
+     ;; ???           :service_name
+
      ::trace/trace-id  :trace.trace_id
      ::trace/parent-id :trace.parent_id
-     ::trace/span-id   :trace.span_id}))
+     ::trace/span-id   :trace.span_id
+
+     :io.honeycomb/annotation-type :meta.annotation_type
+     :io.honeycomb/link-trace-id   :trace.link.trace_id
+     :io.honeycomb/link-span-id    :trace.link.span_id}))
 
 
 (defn- format-throwable

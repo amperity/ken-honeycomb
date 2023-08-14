@@ -6,6 +6,11 @@ follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [Unreleased]
+
+...
+
+
 ## [1.2.0] - 2023-08-14
 
 ### Changed
@@ -55,6 +60,7 @@ internal adoption in Amperity's codebase.
 Initial open-source project release.
 
 
+[Unreleased]: https://github.com/amperity/ken/compare/1.2.0...HEAD
 [1.2.0]: https://github.com/amperity/ken/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/amperity/ken/compare/1.0.3...1.1.0
 [1.0.3]: https://github.com/amperity/ken/compare/1.0.2...1.0.3

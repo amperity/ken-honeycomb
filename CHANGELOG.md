@@ -8,7 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-...
+### Changed
+- Conditionally set dataset per-event based on the `:service.name` property,
+  following the OTEL spec.
+  [PR#6](https://github.com/amperity/ken-honeycomb/pull/6)
 
 
 ## [1.1.0] - 2023-05-08

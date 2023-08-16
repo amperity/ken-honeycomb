@@ -119,12 +119,10 @@
         (.setTimestamp event (inst-ms timestamp)))
       (when-let [sample-rate (::event/sample-rate data)]
         (.setSampleRate event (long sample-rate)))
-      ;; Follow OTEL spec and set dataset based on service.name.
-      (when-let [service-name (:service.name data)]
-        (.setDataset event service-name))
       ;; TODO: it's possible for events to override some of the client
       ;; properties; how should this be exposed?
       ;; - ApiHost
+      ;; - Dataset
       ;; - Metadata
       ;; - WriteKey
       event)))

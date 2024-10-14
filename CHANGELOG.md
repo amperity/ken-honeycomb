@@ -8,6 +8,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+...
+
+
+## [1.3.0] - 2024-10-14
+
 ### Changed
 - Revert "Conditionally set dataset per-event based on the `:service.name`
   property, following the OTEL spec."
@@ -18,6 +23,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Ken does its own down-sampling logic, so events should be sent "presampled"
   to Honeycomb. Previously, the Honeycomb client would _also_ apply the sample
   rate, resulting in unintentional double-sampling.
+  [PR#8](https://github.com/amperity/ken-honeycomb/pull/8)
 
 
 ## [1.2.0] - 2023-08-14
@@ -69,7 +75,8 @@ internal adoption in Amperity's codebase.
 Initial open-source project release.
 
 
-[Unreleased]: https://github.com/amperity/ken/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/amperity/ken/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/amperity/ken/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/amperity/ken/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/amperity/ken/compare/1.0.3...1.1.0
 [1.0.3]: https://github.com/amperity/ken/compare/1.0.2...1.0.3

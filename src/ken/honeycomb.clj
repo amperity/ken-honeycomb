@@ -134,7 +134,7 @@
   [honeyclient transform data]
   (when-not (false? (::trace/keep? data))
     (when-let [event (create-event honeyclient transform data)]
-      (.send event))))
+      (.sendPresampled event))))
 
 
 ;; ## Client Construction

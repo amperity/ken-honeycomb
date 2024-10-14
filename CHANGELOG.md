@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Revert "Conditionally set dataset per-event based on the `:service.name`
   property, following the OTEL spec."
   [PR#7](https://github.com/amperity/ken-honeycomb/pull/7)
+- Update dependency versions, including Clojure 1.12 and libhoney 1.6.
 
 
 ## [1.2.0] - 2023-08-14

@@ -14,6 +14,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   [PR#7](https://github.com/amperity/ken-honeycomb/pull/7)
 - Update dependency versions, including Clojure 1.12 and libhoney 1.6.
 
+### Fixed
+- Ken does its own down-sampling logic, so events should be sent "presampled"
+  to Honeycomb. Previously, the Honeycomb client would _also_ apply the sample
+  rate, resulting in unintentional double-sampling.
+
 
 ## [1.2.0] - 2023-08-14
 

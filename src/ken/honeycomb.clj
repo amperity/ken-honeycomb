@@ -101,7 +101,7 @@
   can handle as well as perform some data cleanup on the event."
   [transform event]
   (when-let [fields (-> event
-                        (dissoc ::event/time ::event/sample-rate)
+                        (dissoc ::event/time ::event/sample-rate ::trace/sample-rate)
                         (transform)
                         (not-empty))]
     (walk/prewalk format-value fields)))
@@ -117,7 +117,7 @@
       (.addFields event fields)
       (when-let [timestamp (::event/time data)]
         (.setTimestamp event (inst-ms timestamp)))
-      (when-let [sample-rate (::event/sample-rate data)]
+      (when-let [sample-rate (or (::event/sample-rate data) (::trace/sample-rate data))]
         (.setSampleRate event (long sample-rate)))
       ;; TODO: it's possible for events to override some of the client
       ;; properties; how should this be exposed?

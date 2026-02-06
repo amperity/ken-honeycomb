@@ -50,7 +50,7 @@
              :sym 'symbolic
              :ken.event/time (java.time.Instant/parse "1999-12-31T08:00:00.000Z")
              :ken.event/sample-rate 10
-             :ken.trace/sample-rate 10}))))
+             :ken.trace/upstream-sample-rate 10}))))
   (testing "honeycomb event fields"
     (is (= {"foo" "bar"}
            (#'hc/format-fields
@@ -58,7 +58,7 @@
             {:foo "bar"
              :ken.event/time (java.time.Instant/parse "1999-12-31T08:00:00.000Z")
              :ken.event/sample-rate 10
-             :ken.trace/sample-rate 10}))
+             :ken.trace/upstream-sample-rate 10}))
         "should not be included in field data"))
   (testing "collections"
     (is (= {"set" #{1 2 3}
@@ -160,7 +160,7 @@
               :fields {"foo" "bar"}}
              (-> (#'hc/create-event honeyclient identity {:foo "bar"
                                                           :ken.event/time mock-time
-                                                          :ken.trace/sample-rate 100})
+                                                          :ken.trace/upstream-sample-rate 100})
                  (get-event-data)))
           "should be set by :ken.event/sample-rate when provided")
       (is (= {:timestamp (inst-ms mock-time)
@@ -169,7 +169,7 @@
              (-> (#'hc/create-event honeyclient identity {:foo "bar"
                                                           :ken.event/time mock-time
                                                           :ken.event/sample-rate 10
-                                                          :ken.trace/sample-rate 100})
+                                                          :ken.trace/upstream-sample-rate 100})
                  (get-event-data)))
           "should prefer :ken.event/sample-rate if both provided (should only occur if user manipulates data by hand)"))
     (.close honeyclient)))

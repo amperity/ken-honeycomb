@@ -8,7 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-...
+- Update ken to latest version and use the new `:ken.trace/upstream-sampling`
+  to set the Honeycomb sample rate.
+  [PR#9](https://github.com/amperity/ken-honeycomb/pull/8)
 
 
 ## [1.3.0] - 2024-10-14

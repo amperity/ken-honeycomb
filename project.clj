@@ -9,7 +9,7 @@
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]
-   [com.amperity/ken "1.2.0"]
+   [com.amperity/ken "2.1.55"]
    [com.stuartsierra/component "1.1.0"]
    [io.honeycomb.libhoney/libhoney-java "1.6.0"]]
 

@@ -8,8 +8,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+...
+
+## [1.4.1] - 2026-02-10
+
+### Changed
+- Update ken to latest version.
+
 ## [1.4.0] - 2026-02-10
 
+### Changed
 - Update ken to latest version and use the new `:ken.trace/upstream-sampling`
   to set the Honeycomb sample rate.
   [PR#9](https://github.com/amperity/ken-honeycomb/pull/8)
@@ -79,7 +87,8 @@ internal adoption in Amperity's codebase.
 Initial open-source project release.
 
 
-[Unreleased]: https://github.com/amperity/ken/compare/1.4.0...HEAD
+[Unreleased]: https://github.com/amperity/ken/compare/1.4.1...HEAD
+[1.4.1]: https://github.com/amperity/ken/compare/1.3.0...1.4.1
 [1.4.0]: https://github.com/amperity/ken/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/amperity/ken/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/amperity/ken/compare/1.1.0...1.2.0

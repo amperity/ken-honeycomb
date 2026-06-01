@@ -173,3 +173,24 @@
                  (get-event-data)))
           "should prefer :ken.event/sample-rate if both provided (should only occur if user manipulates data by hand)"))
     (.close honeyclient)))
+
+
+(def ^:private real-trace "0123456789abcdef0123456789abcdef")
+(def ^:private real-span "0123456789abcdef")
+
+
+(deftest link-event-test
+  (testing "builds a link annotation from a source span to a target"
+    (is (= {:ken.event/level :trace
+            :ken.trace/trace-id "cur-trace"
+            :ken.trace/parent-id "cur-span"
+            :io.honeycomb/annotation-type "link"
+            :io.honeycomb/link-trace-id real-trace
+            :io.honeycomb/link-span-id real-span}
+           (dissoc (hc/link-event {:ken.trace/trace-id "cur-trace"
+                                   :ken.trace/span-id "cur-span"}
+                                  real-trace real-span)
+                   :ken.event/time))))
+  (testing "returns nil when a source id or both targets are missing"
+    (is (nil? (hc/link-event nil nil real-trace real-span)))
+    (is (nil? (hc/link-event "cur-trace" "cur-span" nil nil)))))

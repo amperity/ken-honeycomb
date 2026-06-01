@@ -261,6 +261,30 @@
       (tap/send)))
 
 
+(defn link-event
+  "Builds (without sending) a Honeycomb \"link\" annotation from a source span (a
+  span map or explicit ids) to a target. Returns nil when a source id or both
+  targets are absent."
+  ([from-span target-trace target-span]
+   (link-event (::trace/trace-id from-span) (::trace/span-id from-span)
+               target-trace target-span))
+  ([current-trace current-span target-trace target-span]
+   (when (and current-trace
+              current-span
+              (or target-trace
+                  target-span))
+     (cond->
+       {::event/time (event/now)
+        ::event/level :trace
+        ::trace/trace-id current-trace
+        ::trace/parent-id current-span
+        :io.honeycomb/annotation-type "link"}
+       target-trace
+       (assoc :io.honeycomb/link-trace-id target-trace)
+       target-span
+       (assoc :io.honeycomb/link-span-id target-span)))))
+
+
 (defn add-span-link
   "Add a link from the identified (or current) span to another trace or span."
   ([target-trace target-span]
@@ -269,23 +293,9 @@
          current-span (::trace/span-id current-data)]
      (add-span-link current-trace current-span target-trace target-span)))
   ([current-trace current-span target-trace target-span]
-   (when (and current-trace
-              current-span
-              (or target-trace
-                  target-span))
-     (->
-       {::event/time (event/now)
-        ::event/level :trace
-        ::trace/trace-id current-trace
-        ::trace/parent-id current-span
-        :io.honeycomb/annotation-type "link"}
-       (cond->
-         target-trace
-         (assoc :io.honeycomb/link-trace-id target-trace)
-         target-span
-         (assoc :io.honeycomb/link-span-id target-span))
-       (ken/enrich-span)
-       (tap/send)))))
+   (some-> (link-event current-trace current-span target-trace target-span)
+           (ken/enrich-span)
+           (tap/send))))
 
 
 (defmacro watch-linked

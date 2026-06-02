@@ -8,7 +8,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-...
+### Added
+- `link-event` builds a Honeycomb "link" annotation from a span (a span map or
+  explicit ids) without enriching or sending it, so callers with no ambient
+  trace context (e.g. Rama dataflow) can compose their own enrichment before
+  sending. `add-span-link` now builds on it.
 
 ## [1.4.1] - 2026-02-10
 
